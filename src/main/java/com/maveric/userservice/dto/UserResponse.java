@@ -1,18 +1,17 @@
 package com.maveric.userservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.maveric.userservice.enumeration.Gender;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.Date;
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor
 public class UserResponse {
 
-    private long id;
+    private String _id;
     private String firstName;
     private String lastName;
     private String middleName;
@@ -20,5 +19,9 @@ public class UserResponse {
     private String email;
     private String address;
     private String dateOfBirth;
-    private String gender;
+    private Gender gender;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String role;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String Password;
 }

@@ -22,15 +22,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper mapper;
     public List<UserResponse> getUsers(Integer page, Integer pageSize) {
-        Pageable paging = (Pageable) PageRequest.of(page, pageSize);
+        Pageable paging = PageRequest.of(page, pageSize);
         Page<User> pageResult = repository.findAll(paging);
         if(pageResult.hasContent()) {
-            return pageResult.getContent().stream()
-                    .map(
-                            user -> mapper.map(user)
-                    ).collect(
-                            Collectors.toList()
-                    );
+            List<User> users = pageResult.getContent();
+            return mapper.mapToDto(users);
         } else {
             return new ArrayList<>();
         }
@@ -44,25 +40,25 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public UserResponse getUserDetails(String userId) {
-        User transactionResult=repository.findById(Long.valueOf(userId)).orElseThrow(() -> new UserNotFoundException("User not found"));
-        return mapper.map(transactionResult);
+        User userResult=repository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        return mapper.map(userResult);
     }
     @Override
     public String deleteUser(String userId) {
-        repository.deleteById(Long.valueOf(userId));
-        return "Transaction deleted successfully.";
+        repository.deleteById(userId);
+        return "User deleted successfully.";
     }
 
     @Override
     public UserResponse getUserDetailsByEmail(String emailId) {
-        User transactionResult=repository.findByEmail(emailId);//.orElseThrow(() -> new UserNotFoundException("User not found"));
-        return mapper.map(transactionResult);
+        User userResult=repository.findByEmail(emailId);//.orElseThrow(() -> new UserNotFoundException("User not found"));
+        return mapper.map(userResult);
     }
 
     @Override
     public UserResponse updateUser(String userId, UserResponse userResponse) {
-        User userResult=repository.findById(Long.valueOf(userId)).orElseThrow(() -> new UserNotFoundException("User not found"));
-        userResult.setId(userResult.getId());
+        User userResult=repository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+        userResult.set_id(userResult.get_id());
         userResult.setFirstName(userResponse.getFirstName());
         userResult.setLastName(userResponse.getLastName());
         userResult.setMiddleName(userResult.getMiddleName());

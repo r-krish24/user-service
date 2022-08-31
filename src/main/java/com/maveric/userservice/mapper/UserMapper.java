@@ -13,4 +13,6 @@ public interface UserMapper {
     UserResponse map(User user);
 
     List<User> map (List<UserResponse> userResponses);
+
+    List<UserResponse> mapToDto (List<User> users);
 }

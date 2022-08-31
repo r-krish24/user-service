@@ -13,7 +13,7 @@ public class UserMapperImpl implements UserMapper {
     @Override
     public User map(UserResponse userResponse) {
         return new User(
-                userResponse.getId(),
+                userResponse.get_id(),
                 userResponse.getFirstName(),
                 userResponse.getLastName(),
                 userResponse.getMiddleName(),
@@ -21,7 +21,9 @@ public class UserMapperImpl implements UserMapper {
                 userResponse.getEmail(),
                 userResponse.getAddress(),
                 userResponse.getDateOfBirth(),
-                userResponse.getGender()
+                userResponse.getGender(),
+                userResponse.getRole(),
+                userResponse.getPassword()
 
         );
     }
@@ -29,7 +31,7 @@ public class UserMapperImpl implements UserMapper {
     @Override
     public UserResponse map(User user) {
         return new UserResponse(
-                user.getId(),
+                user.get_id(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getMiddleName(),
@@ -37,17 +39,36 @@ public class UserMapperImpl implements UserMapper {
                 user.getEmail(),
                 user.getAddress(),
                 user.getDateOfBirth(),
-                user.getGender()
+                user.getGender(),
+                user.getRole(),
+                user.getPassword()
         );
     }
 
     @Override
     public List<User> map(List<UserResponse> userResponses) {
         List<User> list = new ArrayList<User>(userResponses.size());
-        for(UserResponse transactionDto:userResponses)
+        for(UserResponse userDto:userResponses)
         {
-            list.add(map(transactionDto));
+            list.add(map(userDto));
         }
         return list;
+    }
+
+    @Override
+    public List<UserResponse> mapToDto(List<User> users) {
+        return users.stream().map(userResponse -> new UserResponse(
+                userResponse.get_id(),
+                userResponse.getFirstName(),
+                userResponse.getLastName(),
+                userResponse.getMiddleName(),
+                userResponse.getPhoneNumber(),
+                userResponse.getEmail(),
+                userResponse.getAddress(),
+                userResponse.getDateOfBirth(),
+                userResponse.getGender(),
+                userResponse.getRole(),
+                userResponse.getPassword()
+        )).toList();
     }
 }
