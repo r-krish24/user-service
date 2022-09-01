@@ -61,12 +61,12 @@ public class UserServiceImpl implements UserService {
         userResult.set_id(userResult.get_id());
         userResult.setFirstName(userResponse.getFirstName());
         userResult.setLastName(userResponse.getLastName());
-        userResult.setMiddleName(userResult.getMiddleName());
-        userResult.setPhoneNumber(userResult.getPhoneNumber());
-        userResult.setEmail(userResult.getEmail());
-        userResult.setAddress(userResult.getAddress());
-        userResult.setDateOfBirth(userResult.getDateOfBirth());
-        userResult.setGender(userResult.getGender());
+        userResult.setMiddleName(userResponse.getMiddleName());
+        userResult.setPhoneNumber(userResponse.getPhoneNumber());
+        userResult.setEmail(userResponse.getEmail());
+        userResult.setAddress(userResponse.getAddress());
+        userResult.setDateOfBirth(userResponse.getDateOfBirth());
+        userResult.setGender(userResponse.getGender());
         User accountUpdated = repository.save(userResult);
         return mapper.map(accountUpdated);
     }

@@ -61,7 +61,6 @@ public class UserServiceTest {
         when(pageResult.hasContent()).thenReturn(true);
         when(pageResult.getContent()).thenReturn(Arrays.asList(getUser(),getUser()));
         when(mapper.mapToDto(any())).thenReturn(Arrays.asList(getUserDto(),getUserDto()));
-
         List<UserResponse> users = service.getUsers(1,1);
 
         assertEquals("karthick", users.get(0).getFirstName());

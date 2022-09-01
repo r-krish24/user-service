@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,15 @@ public class ExceptionControllerAdvisor {
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public final ErrorDto handleUserNotFoundException(UserNotFoundException exception) {
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setCode(USER_NOT_FOUND_CODE);
+        errorDto.setMessage(exception.getMessage());
+        return errorDto;
+    }
+
+    @ExceptionHandler(HttpClientErrorException.NotFound.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public final ErrorDto handleUserNotFoundException(HttpClientErrorException exception) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setCode(USER_NOT_FOUND_CODE);
         errorDto.setMessage(exception.getMessage());

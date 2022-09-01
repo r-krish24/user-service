@@ -1,5 +1,4 @@
 package com.maveric.userservice.repository;
-
 import com.maveric.userservice.model.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,5 +29,4 @@ public class UserRepositoryTest {
         assertNotNull(user);
         assert(user.size()>0);
     }
-
 }
