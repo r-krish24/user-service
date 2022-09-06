@@ -1,12 +1,13 @@
 package com.maveric.userservice.controller;
 
-import com.maveric.userservice.dto.UserResponse;
+import com.maveric.userservice.dto.UserDto;
 import com.maveric.userservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequestMapping("/api/v1")
@@ -17,21 +18,21 @@ public class UserController {
     UserService userService;
 
     @GetMapping("users")
-    public ResponseEntity<List<UserResponse>> getUsers(@RequestParam(defaultValue = "0") Integer page,@RequestParam(defaultValue = "10") Integer pageSize){
-        List<UserResponse> userResponses = userService.getUsers(page,pageSize);
-        return new ResponseEntity<List<UserResponse>>(userResponses, HttpStatus.OK);
+    public ResponseEntity<List<UserDto>> getUsers(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer pageSize){
+        List<UserDto> userRespons = userService.getUsers(page,pageSize);
+        return new ResponseEntity<List<UserDto>>(userRespons, HttpStatus.OK);
     }
 
     @PostMapping("users")
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserResponse userResponse) {
-        UserResponse userDtoResponse = userService.createUser(userResponse);
-        return new ResponseEntity<UserResponse>(userDtoResponse, HttpStatus.CREATED);
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
+        UserDto userDtoResponse = userService.createUser(userDto);
+        return new ResponseEntity<UserDto>(userDtoResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("users/{userId}")
-    public ResponseEntity<UserResponse> getUserDetails(@PathVariable String userId) {
-        UserResponse userDtoResponse = userService.getUserDetails(userId);
-        return new ResponseEntity<UserResponse>(userDtoResponse, HttpStatus.OK);
+    public ResponseEntity<UserDto> getUserDetails(@PathVariable String userId) {
+        UserDto userDtoResponse = userService.getUserDetails(userId);
+        return new ResponseEntity<UserDto>(userDtoResponse, HttpStatus.OK);
 
     }
 
@@ -42,15 +43,15 @@ public class UserController {
     }
 
     @PutMapping("users/{userId}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable String userId,@RequestBody UserResponse userResponse) {
-        UserResponse balanceDtoResponse = userService.updateUser(userId,userResponse);
-        return new ResponseEntity<UserResponse>(balanceDtoResponse, HttpStatus.OK);
+    public ResponseEntity<UserDto> updateUser(@PathVariable String userId, @RequestBody UserDto userDto) {
+        UserDto userDto1 = userService.updateUser(userId, userDto);
+        return new ResponseEntity<UserDto>(userDto1, HttpStatus.OK);
     }
 
     @GetMapping("users/getUserByEmail/{emailId}")
-    public ResponseEntity<UserResponse> getUserDetailsByEmail(@PathVariable String emailId) {
-        UserResponse userDtoResponse = userService.getUserDetailsByEmail(emailId);
-        return new ResponseEntity<UserResponse>(userDtoResponse, HttpStatus.OK);
+    public ResponseEntity<UserDto> getUserDetailsByEmail(@PathVariable String emailId) {
+        UserDto userDtoResponse = userService.getUserDetailsByEmail(emailId);
+        return new ResponseEntity<UserDto>(userDtoResponse, HttpStatus.OK);
 
     }
 }

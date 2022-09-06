@@ -1,19 +1,22 @@
 package com.maveric.userservice.service;
 
-import com.maveric.userservice.dto.UserResponse;
+import com.maveric.userservice.dto.UserDto;
 import com.maveric.userservice.exception.UserNotFoundException;
 import com.maveric.userservice.mapper.UserMapper;
 import com.maveric.userservice.model.User;
 import com.maveric.userservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -21,7 +24,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper mapper;
-    public List<UserResponse> getUsers(Integer page, Integer pageSize) {
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    public List<UserDto> getUsers(Integer page, Integer pageSize) {
         Pageable paging = PageRequest.of(page, pageSize);
         Page<User> pageResult = repository.findAll(paging);
         if(pageResult.hasContent()) {
@@ -31,16 +37,17 @@ public class UserServiceImpl implements UserService {
             return new ArrayList<>();
         }
     }
-    public UserResponse createUser(UserResponse userResponse) {
-        //Adding CreatedTime
-
-        User user = mapper.map(userResponse);
+    public UserDto createUser(UserDto userDto) {
+        String pass = passwordEncoder.encode(userDto.getPassword());
+        userDto.setPassword(pass);
+        System.out.println(pass);
+        User user = mapper.map(userDto);
         User userResult = repository.save(user);
         return  mapper.map(userResult);
     }
     @Override
-    public UserResponse getUserDetails(String userId) {
-        User userResult=repository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+    public UserDto getUserDetails(String userId) {
+        User userResult=repository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with id " + userId));
         return mapper.map(userResult);
     }
     @Override
@@ -50,23 +57,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse getUserDetailsByEmail(String emailId) {
-        User userResult=repository.findByEmail(emailId);//.orElseThrow(() -> new UserNotFoundException("User not found"));
+    public UserDto getUserDetailsByEmail(String emailId) {
+        User userResult=repository.findByEmail(emailId);
         return mapper.map(userResult);
     }
 
     @Override
-    public UserResponse updateUser(String userId, UserResponse userResponse) {
+    public UserDto updateUser(String userId, UserDto userDto) {
         User userResult=repository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
         userResult.set_id(userResult.get_id());
-        userResult.setFirstName(userResponse.getFirstName());
-        userResult.setLastName(userResponse.getLastName());
-        userResult.setMiddleName(userResponse.getMiddleName());
-        userResult.setPhoneNumber(userResponse.getPhoneNumber());
-        userResult.setEmail(userResponse.getEmail());
-        userResult.setAddress(userResponse.getAddress());
-        userResult.setDateOfBirth(userResponse.getDateOfBirth());
-        userResult.setGender(userResponse.getGender());
+        userResult.setFirstName(userDto.getFirstName());
+        userResult.setLastName(userDto.getLastName());
+        userResult.setMiddleName(userDto.getMiddleName());
+        userResult.setPhoneNumber(userDto.getPhoneNumber());
+        userResult.setEmail(userDto.getEmail());
+        userResult.setAddress(userDto.getAddress());
+        userResult.setDateOfBirth(userDto.getDateOfBirth());
+        userResult.setGender(userDto.getGender());
         User accountUpdated = repository.save(userResult);
         return mapper.map(accountUpdated);
     }

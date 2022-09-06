@@ -17,6 +17,10 @@ public class Constants {
     public static final String METHOD_NOT_ALLOWED_MESSAGE="Method Not Allowed. Kindly check the Request URL and Request Type.";
     public static final String BAD_REQUEST_CODE="400";
     public static final String BAD_REQUEST_MESSAGE="Invalid inputs!";
+
+    public static final String INVALID_INPUT_TYPE="Gender should be MALE/FEMALE";
+
+    public static final String HttpMessageNotReadableException_MESSAGE="Format Miss Matching";
     public static LocalDateTime getCurrentDateTime() {
         return (LocalDateTime.now());
     }

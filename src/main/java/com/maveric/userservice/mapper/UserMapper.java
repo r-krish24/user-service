@@ -1,5 +1,5 @@
 package com.maveric.userservice.mapper;
-import com.maveric.userservice.dto.UserResponse;
+import com.maveric.userservice.dto.UserDto;
 import com.maveric.userservice.model.User;
 import org.mapstruct.Mapper;
 
@@ -8,11 +8,11 @@ import java.util.List;
 @Mapper(componentModel="User")
 public interface UserMapper {
 
-    User map(UserResponse userResponse);
+    User map(UserDto userDto);
 
-    UserResponse map(User user);
+    UserDto map(User user);
 
-    List<User> map (List<UserResponse> userResponses);
+    List<User> map (List<UserDto> userDtos);
 
-    List<UserResponse> mapToDto (List<User> users);
+    List<UserDto> mapToDto (List<User> users);
 }

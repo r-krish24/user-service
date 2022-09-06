@@ -1,7 +1,7 @@
 package com.maveric.userservice.service;
 
 
-import com.maveric.userservice.dto.UserResponse;
+import com.maveric.userservice.dto.UserDto;
 import com.maveric.userservice.enumeration.Gender;
 import com.maveric.userservice.mapper.UserMapper;
 import com.maveric.userservice.model.User;
@@ -47,10 +47,10 @@ public class UserServiceTest {
 
     @Test
     public void testCreateUser() throws Exception{
-        when(mapper.map(any(UserResponse.class))).thenReturn(getUser());
+        when(mapper.map(any(UserDto.class))).thenReturn(getUser());
         when(mapper.map(any(User.class))).thenReturn(getUserDto());
         when(repository.save(any())).thenReturn(getUser());
-        UserResponse userDto = service.createUser(getUserDto());
+        UserDto userDto = service.createUser(getUserDto());
         assertSame(userDto.getFirstName(), getUser().getFirstName());
     }
 
@@ -61,7 +61,7 @@ public class UserServiceTest {
         when(pageResult.hasContent()).thenReturn(true);
         when(pageResult.getContent()).thenReturn(Arrays.asList(getUser(),getUser()));
         when(mapper.mapToDto(any())).thenReturn(Arrays.asList(getUserDto(),getUserDto()));
-        List<UserResponse> users = service.getUsers(1,1);
+        List<UserDto> users = service.getUsers(1,1);
 
         assertEquals("karthick", users.get(0).getFirstName());
         assertEquals(Gender.MALE, users.get(1).getGender());
@@ -72,7 +72,7 @@ public class UserServiceTest {
         when(repository.findById("2")).thenReturn(Optional.of(getUser()));
         when(mapper.map(any(User.class))).thenReturn(getUserDto());
 
-        UserResponse userDto = service.getUserDetails("2");
+        UserDto userDto = service.getUserDetails("2");
 
         assertSame(userDto.getFirstName(),getUserDto().getFirstName());
     }

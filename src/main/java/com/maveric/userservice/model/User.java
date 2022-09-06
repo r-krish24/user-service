@@ -6,6 +6,9 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor
@@ -15,7 +18,6 @@ import javax.persistence.*;
 @Builder
 @Table(name = "user")
 public class User {
-
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -27,7 +29,8 @@ public class User {
     private String phoneNumber;
     private String email;
     private String address;
-    private String dateOfBirth;
+    private LocalDateTime dateOfBirth;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private String role;
     private String Password;

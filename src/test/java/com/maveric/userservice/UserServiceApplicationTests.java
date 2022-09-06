@@ -1,7 +1,7 @@
 package com.maveric.userservice;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.maveric.userservice.dto.UserResponse;
+import com.maveric.userservice.dto.UserDto;
 import com.maveric.userservice.enumeration.Gender;
 import com.maveric.userservice.model.User;
 import org.junit.jupiter.api.Test;
@@ -18,9 +18,9 @@ class UserServiceApplicationTests {
 	void contextLoads() {
 		assertTrue(true);
 	}
-	public static UserResponse getUserDto()
+	public static UserDto getUserDto()
 	{
-		return  UserResponse.builder()
+		return  UserDto.builder()
 				.firstName("karthick")
 				.lastName("prabhu")
 				.middleName("mh")
