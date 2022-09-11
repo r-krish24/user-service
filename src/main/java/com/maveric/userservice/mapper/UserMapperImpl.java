@@ -47,7 +47,7 @@ public class UserMapperImpl implements UserMapper {
 
     @Override
     public List<User> map(List<UserDto> userRespons) {
-        List<User> list = new ArrayList<User>(userRespons.size());
+        List<User> list = new ArrayList<>(userRespons.size());
         for(UserDto userDto: userRespons)
         {
             list.add(map(userDto));

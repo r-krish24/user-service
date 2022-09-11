@@ -1,7 +1,6 @@
 package com.maveric.userservice.controller;
 
 import com.maveric.userservice.repository.UserRepository;
-import com.maveric.userservice.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.jupiter.api.Tag;
 import org.junit.runner.RunWith;
@@ -33,8 +32,6 @@ public class UserControllerTest {
     @MockBean
     private UserRepository userRepository;
 
-    @MockBean
-    UserServiceImpl userService;
 
     @Test
     public void shouldGetUserWhenRequestMadeToGetUser() throws Exception{

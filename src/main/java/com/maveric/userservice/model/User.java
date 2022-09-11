@@ -1,6 +1,5 @@
 package com.maveric.userservice.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.maveric.userservice.enumeration.Gender;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -8,7 +7,6 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor
@@ -29,7 +27,7 @@ public class User {
     private String phoneNumber;
     private String email;
     private String address;
-    private LocalDateTime dateOfBirth;
+    private LocalDate dateOfBirth;
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private String role;

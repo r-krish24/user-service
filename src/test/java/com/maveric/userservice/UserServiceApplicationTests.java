@@ -6,6 +6,9 @@ import com.maveric.userservice.enumeration.Gender;
 import com.maveric.userservice.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -27,7 +30,7 @@ class UserServiceApplicationTests {
 				.phoneNumber("9788146455")
 				.email("test@gmail.com")
 				.address("madurai")
-				.dateOfBirth("2022-08-30")
+				.dateOfBirth(LocalDateTime.parse("2022-08-30T00:00:00"))
 				.gender(Gender.MALE)
 				.build();
 	}
@@ -40,7 +43,7 @@ class UserServiceApplicationTests {
 				.phoneNumber("9788146455")
 				.email("test@gmail.com")
 				.address("madurai")
-				.dateOfBirth("2022-08-30")
+				.dateOfBirth(LocalDateTime.parse("2022-08-30T00:00:00"))
 				.gender(Gender.MALE)
 				.build();
 	}

@@ -19,8 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static com.maveric.userservice.UserServiceApplicationTests.APIV1;
 import static com.maveric.userservice.UserServiceApplicationTests.getUserDto;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ContextConfiguration(classes= ExceptionControllerAdvisor.class)
@@ -35,7 +34,7 @@ public class ExceptionControllerAdvisorTest {
     ObjectMapper objectMapper;
 
     @Test
-    public void whenRequestSyntaxNotValidShouldGetError400WhenRequestMadeToCreateTransactionDetails() throws Exception
+    public void whenRequestSyntaxNotValidShouldGetError400WhenRequestMadeToCreateUserDetails() throws Exception
     {
         mvc.perform(MockMvcRequestBuilders.post(APIV1)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -46,7 +45,7 @@ public class ExceptionControllerAdvisorTest {
 
 
     @Test
-    public void whenTransactionIdNotFoundShouldGetError404WhenRequestMadeToGetTransactionDetails() throws Exception
+    public void whenUserIdNotFoundShouldGetError404WhenRequestMadeToGetUserDetails() throws Exception
     {
         MvcResult mvcResult =
                 mvc.perform(get(APIV1+"/userId1")
@@ -62,7 +61,7 @@ public class ExceptionControllerAdvisorTest {
     }
 
     @Test
-    public void whenTransactionIdNotFoundShouldGetError404WhenRequestMadeToDeleteTransactionDetails() throws Exception
+    public void whenUserIdNotFoundShouldGetError404WhenRequestMadeToDeleteUserDetails() throws Exception
     {
         MvcResult mvcResult =
                 mvc.perform(delete(APIV1+"/userId1")
@@ -76,4 +75,20 @@ public class ExceptionControllerAdvisorTest {
         assertThat(actualResponse)
                 .isEqualTo(expectedErrorResponse);
     }
+    @Test
+    public void whenUserIdNotFoundShouldGetError404WhenRequestMadeToUpdateUserDetails() throws Exception
+    {
+        MvcResult mvcResult =
+                mvc.perform(put(APIV1+"/userId1")
+                                .contentType(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isNotFound())
+                        .andReturn();
+
+        int expectedErrorResponse = 404;
+        int actualResponse = mvcResult.getResponse().getStatus();
+        System.out.println("actualResponseBody------->"+actualResponse);
+        assertThat(actualResponse)
+                .isEqualTo(expectedErrorResponse);
+    }
+
 }

@@ -11,6 +11,7 @@ import lombok.*;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -49,7 +50,7 @@ public class UserDto {
     @JsonDeserialize(using = DateDeSerializer.class)
     @Past(message = "Date Should be past")
     @NotNull(message = "Date of Birth is mandatory")
-    private LocalDateTime dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Gender is mandatory 'MALE' or 'FEMALE'")
