@@ -12,7 +12,7 @@ public interface UserMapper {
 
     UserDto map(User user);
 
-    List<User> map (List<UserDto> userDtos);
+    List<User> mapToModel (List<UserDto> userDtos);
 
     List<UserDto> mapToDto (List<User> users);
 }

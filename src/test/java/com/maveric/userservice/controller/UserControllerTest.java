@@ -1,6 +1,9 @@
 package com.maveric.userservice.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maveric.userservice.dto.UserDto;
 import com.maveric.userservice.repository.UserRepository;
+import com.maveric.userservice.service.UserService;
 import org.junit.Test;
 import org.junit.jupiter.api.Tag;
 import org.junit.runner.RunWith;
@@ -19,6 +22,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static reactor.core.publisher.Mono.when;
 
 import javax.ws.rs.core.MediaType;
+import java.time.LocalDateTime;
+
 @ContextConfiguration(classes=UserController.class)
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -31,8 +36,10 @@ public class UserControllerTest {
 
     @MockBean
     private UserRepository userRepository;
-
-
+    @MockBean
+    private UserService userService;
+    @Autowired
+    ObjectMapper objectMapper;
     @Test
     public void shouldGetUserWhenRequestMadeToGetUser() throws Exception{
         mvc.perform(get(APIV1)
@@ -53,9 +60,12 @@ public class UserControllerTest {
     @Test
     public void shouldGetStatus201WhenRequestMadeToCreateUser() throws Exception
     {
+        UserDto userDto=getUserDto();
+        //userDto.setDateOfBirth(LocalDate.parse("2022-08-30T00:00:00"));
+        userDto.setPassword("123");
         mvc.perform(post(APIV1)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(getUserDto()))
+                        .content(objectMapper.writeValueAsString(userDto))
                 )
                 .andExpect(status().isCreated())
                 .andDo(print());
@@ -72,7 +82,7 @@ public class UserControllerTest {
     @Test
     public void shouldGetStatus200WhenRequestMadeToDeleteUser() throws Exception
     {
-        mvc.perform(delete(APIV1+"/2")
+        mvc.perform(delete(APIV1+"/123")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -81,13 +91,20 @@ public class UserControllerTest {
     @Test
     public void shouldGetStatus200WhenRequestMadeToUpdateUser() throws Exception
     {
-        mvc.perform(put(APIV1+"/2")
+        mvc.perform(put(APIV1+"/123")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(getUserDto()))
+                        .content(objectMapper.writeValueAsString(getUserDto()))
                 )
                 .andExpect(status().isOk())
                 .andDo(print());
     }
 
 
+    @Test
+    public void getUsers() throws Exception {
+        mvc.perform(get(APIV1+"/2")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 }

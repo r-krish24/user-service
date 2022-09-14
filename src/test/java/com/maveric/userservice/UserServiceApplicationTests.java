@@ -7,6 +7,7 @@ import com.maveric.userservice.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,26 +25,28 @@ class UserServiceApplicationTests {
 	public static UserDto getUserDto()
 	{
 		return  UserDto.builder()
+				._id("123")
 				.firstName("karthick")
 				.lastName("prabhu")
 				.middleName("mh")
 				.phoneNumber("9788146455")
 				.email("test@gmail.com")
 				.address("madurai")
-				.dateOfBirth(LocalDateTime.parse("2022-08-30T00:00:00"))
+				.dateOfBirth(LocalDate.parse("2022-08-30"))
 				.gender(Gender.MALE)
 				.build();
 	}
 	public static User getUser()
 	{
 		return  User.builder()
+				._id("123")
 				.firstName("karthick")
 				.lastName("prabhu")
 				.middleName("mh")
 				.phoneNumber("9788146455")
 				.email("test@gmail.com")
 				.address("madurai")
-				.dateOfBirth(LocalDateTime.parse("2022-08-30T00:00:00"))
+				.dateOfBirth(LocalDate.parse("2022-08-30"))
 				.gender(Gender.MALE)
 				.build();
 	}

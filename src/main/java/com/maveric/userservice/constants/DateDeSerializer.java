@@ -8,6 +8,7 @@ import com.maveric.userservice.exception.InvalidException;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
@@ -25,9 +26,9 @@ public class DateDeSerializer extends StdDeserializer<LocalDate> {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             //System.out.println("formatter"+formatter);
             LocalDate date = LocalDate.parse(value,formatter);
-            //LocalDateTime localDateTime = date.atStartOfDay();
+            LocalDateTime localDateTime = date.atStartOfDay();
 
-            System.out.println("date"+date);
+            System.out.println("date="+localDateTime);
             return date;
         } catch (DateTimeParseException e) {
 

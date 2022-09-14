@@ -1,6 +1,7 @@
 package com.maveric.userservice.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.maveric.userservice.dto.ErrorDto;
 import com.maveric.userservice.repository.UserRepository;
 import com.maveric.userservice.service.UserService;
 import org.junit.Test;
@@ -19,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static com.maveric.userservice.UserServiceApplicationTests.APIV1;
 import static com.maveric.userservice.UserServiceApplicationTests.getUserDto;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,15 +34,28 @@ public class ExceptionControllerAdvisorTest {
 
     @Autowired
     ObjectMapper objectMapper;
+    private final ExceptionControllerAdvisor controllerAdvisor = new ExceptionControllerAdvisor();
 
     @Test
-    public void whenRequestSyntaxNotValidShouldGetError400WhenRequestMadeToCreateUserDetails() throws Exception
+    public void handleUserNotFoundException() {
+        UserNotFoundException exception = new UserNotFoundException("User Not found");
+        ErrorDto error = controllerAdvisor.handleUserNotFoundException(exception);
+        assertEquals("404",error.getCode());
+    }
+
+    public void invalidexceptiontest() {
+        InvalidException exception = new InvalidException("Invalid Exception");
+        ErrorDto error = controllerAdvisor.invalidException(exception);
+        assertEquals("400",error.getCode());
+    }
+    @Test
+    public void whenRequestSyntaxNotValidShouldGetError404WhenRequestMadeToCreateUserDetails() throws Exception
     {
         mvc.perform(MockMvcRequestBuilders.post(APIV1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(getUserDto()))
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
     }
 
 
