@@ -1,19 +1,12 @@
 package com.maveric.userservice.exception;
-
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.maveric.userservice.dto.ErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import javax.xml.bind.SchemaOutputResolver;
-import java.util.HashMap;
-import java.util.Map;
 import static com.maveric.userservice.constants.Constants.*;
 
 @RestControllerAdvice
@@ -61,10 +54,9 @@ public class ExceptionControllerAdvisor {
             HttpMessageNotReadableException ex) {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setCode(BAD_REQUEST_CODE);
-        System.out.println(ex.getMessage());
         if(ex.getMessage().contains("com.maveric.userservice.enumeration.Gender")) //NOSONAR
             errorDto.setMessage(INVALID_INPUT_TYPE);
-        else if(ex.getMessage().contains("Date format Miss Match"))
+        else if(ex.getMessage().contains("Date format Miss Match"))//NOSONAR
             errorDto.setMessage(INVALID_DATE_TYPE);
         else
             errorDto.setMessage(HTTPMESSAGENOTREADABLEEXCEPTION_MESSAGE);
