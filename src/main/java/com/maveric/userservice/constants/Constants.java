@@ -19,8 +19,9 @@ public class Constants {
     public static final String BAD_REQUEST_MESSAGE="Invalid inputs!";
 
     public static final String INVALID_INPUT_TYPE="Gender should be MALE/FEMALE";
+    public static final String INVALID_DATE_TYPE="Date format Miss Match";
 
-    public static final String HttpMessageNotReadableException_MESSAGE="Format Miss Matching";
+    public static final String HTTPMESSAGENOTREADABLEEXCEPTION_MESSAGE="Format Miss Matching";
     public static LocalDateTime getCurrentDateTime() {
         return (LocalDateTime.now());
     }

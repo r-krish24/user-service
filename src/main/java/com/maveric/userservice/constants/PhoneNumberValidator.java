@@ -8,7 +8,5 @@ public class PhoneNumberValidator implements ConstraintValidator<PhoneNumber, St
         return phoneNumber != null &&
                 phoneNumber.matches("[0-9]+") &&
                 phoneNumber.length() ==10;
-                //&&
-                //phoneNumber.length() < 14;
     }
 }

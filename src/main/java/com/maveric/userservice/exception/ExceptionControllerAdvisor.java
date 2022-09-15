@@ -10,6 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.xml.bind.SchemaOutputResolver;
 import java.util.HashMap;
 import java.util.Map;
 import static com.maveric.userservice.constants.Constants.*;
@@ -28,7 +30,7 @@ public class ExceptionControllerAdvisor {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public final ErrorDto invalidException(InvalidException exception) {
         ErrorDto errorDto = new ErrorDto();
-        errorDto.setCode(BAD_REQUEST_CODE);
+        errorDto.setCode(USER_NOT_FOUND_CODE);
         errorDto.setMessage(exception.getMessage());
         return errorDto;
     }
@@ -38,15 +40,8 @@ public class ExceptionControllerAdvisor {
     public ErrorDto handleValidationExceptions(
             MethodArgumentNotValidException ex) {
         ErrorDto errorDto = new ErrorDto();
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach(error -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
         errorDto.setCode(BAD_REQUEST_CODE);
-        errorDto.setMessage(BAD_REQUEST_MESSAGE);
-        errorDto.setErrors(errors);
+        errorDto.setMessage(ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         return errorDto;
     }
 
@@ -67,10 +62,12 @@ public class ExceptionControllerAdvisor {
         ErrorDto errorDto = new ErrorDto();
         errorDto.setCode(BAD_REQUEST_CODE);
         System.out.println(ex.getMessage());
-        if(ex.getMessage().contains("com.maveric.userservice.enumeration.Gender"))
+        if(ex.getMessage().contains("com.maveric.userservice.enumeration.Gender")) //NOSONAR
             errorDto.setMessage(INVALID_INPUT_TYPE);
+        else if(ex.getMessage().contains("Date format Miss Match"))
+            errorDto.setMessage(INVALID_DATE_TYPE);
         else
-            errorDto.setMessage(HttpMessageNotReadableException_MESSAGE);
+            errorDto.setMessage(HTTPMESSAGENOTREADABLEEXCEPTION_MESSAGE);
         return errorDto;
     }
 

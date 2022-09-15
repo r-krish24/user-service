@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String deleteUser(String userId) {
-        if (!repository.findById(userId).isPresent()) {
+        if (repository.findById(userId).isEmpty()) {
             throw new UserNotFoundException(USER_NOT_FOUND_MESSAGE + userId);
         }
         repository.deleteById(userId);
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         if (userResult != null)
             return mapper.map(userResult);
         else
-            throw new UserNotFoundException("User not found! fir this emailId");
+            return new UserDto();
     }
     @Override
     public UserDto updateUser(String userId, UserDto userDto) {

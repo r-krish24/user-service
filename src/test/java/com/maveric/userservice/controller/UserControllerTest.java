@@ -19,10 +19,8 @@ import static com.maveric.userservice.UserServiceApplicationTests.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static reactor.core.publisher.Mono.when;
 
 import javax.ws.rs.core.MediaType;
-import java.time.LocalDateTime;
 
 @ContextConfiguration(classes=UserController.class)
 @RunWith(SpringRunner.class)
@@ -43,25 +41,14 @@ public class UserControllerTest {
     @Test
     public void shouldGetUserWhenRequestMadeToGetUser() throws Exception{
         mvc.perform(get(APIV1)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
-
-//    @Test
-//    public void shouldReturnInternalServerResponseWhenGetUserFromDBReturnsError() throws Exception{
-//        when(userService.getUsers()).thenThrow(new IllegalArgumentException())
-//        mvc.perform(get(APIV1).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isInternalServerError())
-//                .andDo(print());
-//
-//    }
-
     @Test
     public void shouldGetStatus201WhenRequestMadeToCreateUser() throws Exception
     {
         UserDto userDto=getUserDto();
-        //userDto.setDateOfBirth(LocalDate.parse("2022-08-30T00:00:00"));
         userDto.setPassword("123");
         mvc.perform(post(APIV1)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -70,7 +57,6 @@ public class UserControllerTest {
                 .andExpect(status().isCreated())
                 .andDo(print());
     }
-
     @Test
     public void shouldGetStatus200WhenRequestMadeToGetUserDetails() throws Exception
     {

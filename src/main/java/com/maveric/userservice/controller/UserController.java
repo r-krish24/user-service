@@ -17,32 +17,35 @@ public class UserController {
 
     @Autowired
     UserService userService;
-    @CrossOrigin(origins = "http://localhost:8080")
+    /* Returns list of All Users */
     @GetMapping("users")
     public ResponseEntity<List<UserDto>> getUsers(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer pageSize){
         List<UserDto> userRespons = userService.getUsers(page,pageSize);
+
         return new ResponseEntity<>(userRespons, HttpStatus.OK);
     }
-    @CrossOrigin(origins = "http://localhost:8080")
+
+    /* Saving new user */
     @PostMapping("users")
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         UserDto userDtoResponse = userService.createUser(userDto);
         return new ResponseEntity<>(userDtoResponse, HttpStatus.CREATED);
     }
-    @CrossOrigin(origins = "http://localhost:8080")
+
+    /* Returns list of user details by userId */
     @GetMapping("users/{userId}")
     public ResponseEntity<UserDto> getUserDetails(@PathVariable String userId) {
         UserDto userDtoResponse = userService.getUserDetails(userId);
         return new ResponseEntity<>(userDtoResponse, HttpStatus.OK);
 
     }
-    @CrossOrigin(origins = "http://localhost:8080")
+    /* Deleting user by userId */
     @DeleteMapping("users/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable String userId) {
         String result = userService.deleteUser(userId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
-    @CrossOrigin(origins = "http://localhost:8080")
+    /* Update User by UserId */
     @PutMapping("users/{userId}")
     public ResponseEntity<UserDto> updateUser(@PathVariable String userId, @RequestBody UserDto userDto) {
         if(userId.equals(userDto.get_id())) {
@@ -54,7 +57,7 @@ public class UserController {
             throw new UserNotFoundException("Requested User not found id " + userDto.get_id());
         }
     }
-    @CrossOrigin(origins = "http://localhost:8080")
+    /* Returns list details by emailId */
     @GetMapping("users/getUserByEmail/{emailId}")
     public ResponseEntity<UserDto> getUserDetailsByEmail(@PathVariable String emailId) {
         UserDto userDtoResponse = userService.getUserDetailsByEmail(emailId);

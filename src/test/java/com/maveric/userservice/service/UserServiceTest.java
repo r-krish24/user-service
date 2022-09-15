@@ -1,6 +1,4 @@
 package com.maveric.userservice.service;
-
-
 import com.maveric.userservice.dto.UserDto;
 import com.maveric.userservice.enumeration.Gender;
 import com.maveric.userservice.mapper.UserMapper;

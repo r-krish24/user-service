@@ -68,18 +68,18 @@ public class UserMapperImpl implements UserMapper {
     public List<UserDto> mapToDto(List<User> users) {
         if(!users.isEmpty())
             return users.stream().map(userDto -> new UserDto(
-                userDto.get_id(),
-                userDto.getFirstName(),
-                userDto.getLastName(),
-                userDto.getMiddleName(),
-                userDto.getPhoneNumber(),
-                userDto.getEmail(),
-                userDto.getAddress(),
-                userDto.getDateOfBirth(),
-                userDto.getGender(),
-                userDto.getRole(),
-                userDto.getPassword()
-        )).toList();
+                    userDto.get_id(),
+                    userDto.getFirstName(),
+                    userDto.getLastName(),
+                    userDto.getMiddleName(),
+                    userDto.getPhoneNumber(),
+                    userDto.getEmail(),
+                    userDto.getAddress(),
+                    userDto.getDateOfBirth(),
+                    userDto.getGender(),
+                    userDto.getRole(),
+                    userDto.getPassword()
+            )).toList();
         else
             return Collections.<UserDto>emptyList();
     }

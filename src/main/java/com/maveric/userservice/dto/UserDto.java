@@ -3,7 +3,7 @@ package com.maveric.userservice.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.maveric.userservice.constants.DateDeSerializer;
+import com.maveric.userservice.utility.DateDeSerializer;
 import com.maveric.userservice.constants.PhoneNumber;
 import com.maveric.userservice.enumeration.Gender;
 import lombok.*;
@@ -12,7 +12,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 
 @Getter
@@ -55,7 +54,6 @@ public class UserDto {
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Gender is mandatory 'MALE' or 'FEMALE'")
     private Gender gender;
-
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String role;
 
