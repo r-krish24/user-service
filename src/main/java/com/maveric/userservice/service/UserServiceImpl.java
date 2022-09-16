@@ -1,6 +1,6 @@
 package com.maveric.userservice.service;
 
-import com.maveric.userservice.dto.UserResponse;
+import com.maveric.userservice.dto.UserDto;
 import com.maveric.userservice.exception.UserNotFoundException;
 import com.maveric.userservice.mapper.UserMapper;
 import com.maveric.userservice.model.User;
@@ -9,11 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.maveric.userservice.constants.Constants.USER_DELETED_SUCCESS;
+import static com.maveric.userservice.constants.Constants.USER_NOT_FOUND_MESSAGE;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -21,57 +25,74 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper mapper;
-    public List<UserResponse> getUsers(Integer page, Integer pageSize) {
-        Pageable paging = (Pageable) PageRequest.of(page, pageSize);
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
+
+    public List<UserDto> getUsers(Integer page, Integer pageSize) {
+        Pageable paging = PageRequest.of(page, pageSize);
         Page<User> pageResult = repository.findAll(paging);
-        if(pageResult.hasContent()) {
-            return pageResult.getContent().stream()
-                    .map(
-                            user -> mapper.map(user)
-                    ).collect(
-                            Collectors.toList()
-                    );
+        if (pageResult.hasContent()) {
+            List<User> users = pageResult.getContent();
+            return mapper.mapToDto(users);
         } else {
             return new ArrayList<>();
         }
     }
-    public UserResponse createUser(UserResponse userResponse) {
-        //Adding CreatedTime
 
-        User user = mapper.map(userResponse);
-        User userResult = repository.save(user);
-        return  mapper.map(userResult);
-    }
     @Override
-    public UserResponse getUserDetails(String userId) {
-        User transactionResult=repository.findById(Long.valueOf(userId)).orElseThrow(() -> new UserNotFoundException("User not found"));
-        return mapper.map(transactionResult);
+    public UserDto createUser(UserDto userDto) {
+        String pass = passwordEncoder.encode(userDto.getPassword());
+        userDto.setPassword(pass);
+        User userResult = repository.findByEmail(userDto.getEmail());
+        if (userResult == null) {
+            User user = mapper.map(userDto);
+            User userResult2 = repository.save(user);
+            return mapper.map(userResult2);
+        } else {
+            throw new UserNotFoundException("User Already Exist! for this emailId");
+        }
     }
+
+    @Override
+    public UserDto getUserDetails(String userId) {
+        User userResult = repository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with id " + userId));
+        return mapper.map(userResult);
+    }
+
     @Override
     public String deleteUser(String userId) {
-        repository.deleteById(Long.valueOf(userId));
-        return "Transaction deleted successfully.";
+        if (repository.findById(userId).isEmpty()) {
+            throw new UserNotFoundException(USER_NOT_FOUND_MESSAGE + userId);
+        }
+        repository.deleteById(userId);
+        return USER_DELETED_SUCCESS;
     }
 
     @Override
-    public UserResponse getUserDetailsByEmail(String emailId) {
-        User transactionResult=repository.findByEmail(emailId);//.orElseThrow(() -> new UserNotFoundException("User not found"));
-        return mapper.map(transactionResult);
+    public UserDto getUserDetailsByEmail(String emailId) {
+        User userResult = repository.findByEmail(emailId);
+        if (userResult != null)
+            return mapper.map(userResult);
+        else
+            return new UserDto();
     }
-
     @Override
-    public UserResponse updateUser(String userId, UserResponse userResponse) {
-        User userResult=repository.findById(Long.valueOf(userId)).orElseThrow(() -> new UserNotFoundException("User not found"));
-        userResult.setId(userResult.getId());
-        userResult.setFirstName(userResponse.getFirstName());
-        userResult.setLastName(userResponse.getLastName());
-        userResult.setMiddleName(userResult.getMiddleName());
-        userResult.setPhoneNumber(userResult.getPhoneNumber());
-        userResult.setEmail(userResult.getEmail());
-        userResult.setAddress(userResult.getAddress());
-        userResult.setDateOfBirth(userResult.getDateOfBirth());
-        userResult.setGender(userResult.getGender());
-        User accountUpdated = repository.save(userResult);
-        return mapper.map(accountUpdated);
+    public UserDto updateUser(String userId, UserDto userDto) {
+        if (userId.equals(userDto.get_id())) {
+            User userResult = repository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
+            userResult.set_id(userResult.get_id());
+            userResult.setFirstName(userDto.getFirstName());
+            userResult.setLastName(userDto.getLastName());
+            userResult.setMiddleName(userDto.getMiddleName());
+            userResult.setPhoneNumber(userDto.getPhoneNumber());
+            userResult.setEmail(userDto.getEmail());
+            userResult.setAddress(userDto.getAddress());
+            userResult.setDateOfBirth(userDto.getDateOfBirth());
+            userResult.setGender(userDto.getGender());
+            User accountUpdated = repository.save(userResult);
+            return mapper.map(accountUpdated);
+        } else {
+            throw new UserNotFoundException("User Id not found! Cannot Update account.");
+        }
     }
 }
