@@ -1,103 +1,60 @@
 package com.maveric.userservice.exception;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.maveric.userservice.dto.ErrorDto;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.junit.jupiter.api.Test;
+import org.springframework.core.MethodParameter;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 
-import static com.maveric.userservice.UserServiceApplicationTests.APIV1;
-import static com.maveric.userservice.UserServiceApplicationTests.getUserDto;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
-@ContextConfiguration(classes= ExceptionControllerAdvisor.class)
-@RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
-@WebMvcTest(ExceptionControllerAdvisor.class)
-public class ExceptionControllerAdvisorTest {
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    ObjectMapper objectMapper;
-    private final ExceptionControllerAdvisor controllerAdvisor = new ExceptionControllerAdvisor();
-
+class ExceptionControllerAdvisorTest {
+    private ExceptionControllerAdvisor controllerAdvisor = new ExceptionControllerAdvisor();
     @Test
-    public void handleUserNotFoundException() {
+    void handleUserNotFoundException() {
         UserNotFoundException exception = new UserNotFoundException("User Not found");
         ErrorDto error = controllerAdvisor.handleUserNotFoundException(exception);
         assertEquals("404",error.getCode());
     }
 
-    public void invalidexceptiontest() {
-        InvalidException exception = new InvalidException("Invalid Exception");
+    @Test
+    void handleUserAlreadyExistException() {
+        UserAlreadyExistException exception = new UserAlreadyExistException("User Already Exist");
+        ErrorDto error = controllerAdvisor.handleUserAlreadyExistException(exception);
+        assertEquals("400",error.getCode());
+      }
+
+    @Test
+    void invalidException() {
+        InvalidException exception = new InvalidException("User Not found");
         ErrorDto error = controllerAdvisor.invalidException(exception);
+        assertEquals("404",error.getCode());
+      }
+
+
+    @Test
+    void handleHttpRequestMethodNotSupportedException() {
+        MethodParameter methodParameter = mock(MethodParameter.class);
+        BindingResult bindingResult = mock(BindingResult.class);
+        HttpRequestMethodNotSupportedException exception = new HttpRequestMethodNotSupportedException("error");;
+        ErrorDto error = controllerAdvisor.handleHttpRequestMethodNotSupportedException(exception);
+        assertEquals("405",error.getCode());
+      }
+    @Test
+    void handleHttpMessageNotReadableException()
+    {
+        HttpMessageNotReadableException exception = new HttpMessageNotReadableException("Exception");
+        ErrorDto error = controllerAdvisor.handleHttpMessageNotReadableException(exception);
         assertEquals("400",error.getCode());
     }
-    @Test
-    public void whenRequestSyntaxNotValidShouldGetError404WhenRequestMadeToCreateUserDetails() throws Exception
-    {
-        mvc.perform(MockMvcRequestBuilders.post(APIV1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(getUserDto()))
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
-
 
     @Test
-    public void whenUserIdNotFoundShouldGetError404WhenRequestMadeToGetUserDetails() throws Exception
+    void handleOtherHttpException()
     {
-        MvcResult mvcResult =
-                mvc.perform(get(APIV1+"/userId1")
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isNotFound())
-                        .andReturn();
-
-        int expectedErrorResponse = 404;
-        int actualResponse = mvcResult.getResponse().getStatus();
-        assertThat(actualResponse)
-                .isEqualTo(expectedErrorResponse);
+        Exception exception = new Exception();
+        ErrorDto error = controllerAdvisor.handleOtherHttpException(exception);
+        assertEquals("500",error.getCode());
     }
-
-    @Test
-    public void whenUserIdNotFoundShouldGetError404WhenRequestMadeToDeleteUserDetails() throws Exception
-    {
-        MvcResult mvcResult =
-                mvc.perform(delete(APIV1+"/userId1")
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isNotFound())
-                        .andReturn();
-
-        int expectedErrorResponse = 404;
-        int actualResponse = mvcResult.getResponse().getStatus();
-        assertThat(actualResponse)
-                .isEqualTo(expectedErrorResponse);
-    }
-    @Test
-    public void whenUserIdNotFoundShouldGetError404WhenRequestMadeToUpdateUserDetails() throws Exception
-    {
-        MvcResult mvcResult =
-                mvc.perform(put(APIV1+"/userId1")
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isNotFound())
-                        .andReturn();
-
-        int expectedErrorResponse = 404;
-        int actualResponse = mvcResult.getResponse().getStatus();
-        assertThat(actualResponse)
-                .isEqualTo(expectedErrorResponse);
-    }
-
 }
