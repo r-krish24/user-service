@@ -1,4 +1,4 @@
-package com.maveric.userservice.constants;
+package com.maveric.userservice.validation;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.ElementType;

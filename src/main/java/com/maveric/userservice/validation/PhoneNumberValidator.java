@@ -1,4 +1,4 @@
-package com.maveric.userservice.constants;
+package com.maveric.userservice.validation;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -6,7 +6,7 @@ public class PhoneNumberValidator implements ConstraintValidator<PhoneNumber, St
     @Override
     public boolean isValid(String phoneNumber, ConstraintValidatorContext constraintValidatorContext) {
         return phoneNumber != null &&
-                phoneNumber.matches("[0-9]+") &&
+                phoneNumber.matches("\\d+") &&
                 phoneNumber.length() ==10;
     }
 }
