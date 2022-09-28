@@ -1,7 +1,5 @@
 package com.maveric.userservice.constants;
 
-import java.time.LocalDateTime;
-
 
 public class Constants {
 
@@ -22,7 +20,11 @@ public class Constants {
     public static final String INVALID_DATE_TYPE="Date format Miss Match";
 
     public static final String HTTPMESSAGENOTREADABLEEXCEPTION_MESSAGE="Format Miss Matching";
-    public static LocalDateTime getCurrentDateTime() {
-        return (LocalDateTime.now());
-    }
+    public static final String SERVICE_UNAVAILABLE_CODE="503";
+    public static final String SERVICE_UNAVAILABLE_MESSAGE="Services down! Kindly contact administrator.";
+
+    public static final String INTERNAL_SERVER_ERROR_CODE="500";
+
+    public static final String INTERNAL_SERVER_ERROR_MESSAGE="Server could not resolve your request.";
+
 }
