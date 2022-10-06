@@ -31,6 +31,7 @@ public class UserController {
         log.info("API call to create a new User");
         UserDto userDtoResponse = userService.createUser(userDto);
         log.info("User information Created successfully");
+        userDtoResponse.setPassword(null);
         return new ResponseEntity<>(userDtoResponse, HttpStatus.CREATED);
     }
 
