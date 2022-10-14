@@ -18,10 +18,6 @@ class UserServiceApplicationTests {
 
 	public static final String APIV1 ="/api/v1/users";
 
-	@Test
-	void contextLoads() {
-		assertTrue(true);
-	}
 	public static UserDto getUserDto()
 	{
 		return  UserDto.builder()
